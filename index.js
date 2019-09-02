@@ -3,14 +3,18 @@ const app = express()
 const path = require('path')
 
 const convert = require('./lib/convert')
-
+const apiBCB = require('./lib/api.bcb')
 
 app.set('view engine', 'ejs') //Setando o EJS
 app.set('views', path.join(__dirname, 'views')) // Diretorio que vai ter os Views 
 app.use(express.static(path.join(__dirname, 'public'))) //Arquivos CSS
 
-app.get('/', (req, res) => {
-    res.render('home')
+app.get('/', async(req, res) => {
+    const cotacao = await apiBCB.getCotacao()
+    console.log('cotacao', cotacao)
+    res.render('home', {
+        cotacao
+    })
 })
 
 app.get('/cotacao', (req, res) => {
